@@ -4,7 +4,7 @@ import { AuthContext } from "../context/AuthContext";
 import Register from "../components/Register";
 import { useRouter } from "next/navigation";
 
-export default function page() {
+export default function Page() {
   const allValues = useContext(AuthContext);
   const router = useRouter();
   if (!allValues) return;
