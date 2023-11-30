@@ -4,7 +4,7 @@ import { TodoContext } from "@/app/context/TodoContext";
 import { useParams, useRouter } from "next/navigation";
 import { Todos } from "@/app/lib/definitions";
 
-export default function page() {
+export default function Page() {
   const { todo, editTodo } = useContext(TodoContext);
   const { page } = useParams();
   const [singleTodo, setSingleTodo] = useState({});
@@ -13,17 +13,19 @@ export default function page() {
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
   useEffect(() => {
-    if (page && todo.length >= page) {
-      const filterTodo = todo.find((e: Todos) => e.id === parseInt(page));
+    if (page && todo.length >= parseInt(page as string)) {
+      const filterTodo = todo.find(
+        (e: Todos) => e.id === parseInt(page as string)
+      );
       setSingleTodo(filterTodo);
       setTitle(filterTodo?.title);
       setDesc(filterTodo?.desc);
       setDate(filterTodo?.date);
     }
-  }, []);
+  }, [page, todo]);
   function handleEditTodo(e: any) {
     e.preventDefault();
-    editTodo(parseInt(page), title, desc);
+    editTodo(parseInt(page as string), title, desc);
     router.push("/");
   }
   return (
@@ -36,7 +38,7 @@ export default function page() {
               <form onSubmit={handleEditTodo}>
                 <div className="mb-6">
                   <p className="mb-1 text-xs text-gray-500">
-                    You can't edit date!
+                    You can&apos;t edit date!
                   </p>
                   <input
                     className="w-full rounded border border-stroke px-[14px] py-3 text-base text-body-color outline-none focus:border-primary dark:border-dark-3 dark:bg-transparent dark:text-dark-6"

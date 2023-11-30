@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { TodoContext } from "../context/TodoContext";
 import { useRouter } from "next/navigation";
 import { useParams } from "next/navigation";
-export default function page() {
+export default function Page() {
   const { todo, addTodo } = useContext(TodoContext);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
