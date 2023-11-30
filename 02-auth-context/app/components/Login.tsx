@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 
 export default function Login() {
@@ -9,12 +9,7 @@ export default function Login() {
   const router = useRouter();
   const allValues = useContext(AuthContext);
   if (!allValues) return;
-  const { loginUser, isAuthenticated } = allValues;
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/");
-    }
-  }, [isAuthenticated]);
+  const { loginUser } = allValues;
   const handleLogin = (e: any) => {
     e.preventDefault();
     const findUser = loginUser(email, password);

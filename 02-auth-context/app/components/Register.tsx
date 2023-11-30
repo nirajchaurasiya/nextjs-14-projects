@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useRouter } from "next/navigation";
 
@@ -11,12 +11,8 @@ export default function Register() {
   const [name, setName] = useState("");
   const allValues = useContext(AuthContext);
   if (!allValues) return;
-  const { allUser, registerUser, isAuthenticated } = allValues;
-  useEffect(() => {
-    if (isAuthenticated) {
-      router.push("/");
-    }
-  }, [isAuthenticated]);
+  const { allUser, registerUser } = allValues;
+
   function handleRegister(e: any) {
     e.preventDefault();
     if (email || password || name) {
