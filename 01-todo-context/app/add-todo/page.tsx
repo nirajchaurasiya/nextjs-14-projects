@@ -2,13 +2,18 @@
 import React, { useContext, useState } from "react";
 import { TodoContext } from "../context/TodoContext";
 import { useRouter } from "next/navigation";
-import { useParams } from "next/navigation";
 export default function Page() {
-  const { todo, addTodo } = useContext(TodoContext);
+  const contextValue = useContext(TodoContext);
+
+  if (!contextValue) {
+    // Handle the case when context value is not available
+    return null;
+  }
+
+  const { todo, addTodo } = contextValue;
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const router = useRouter();
-  const params = useParams();
   const handleAddTodo = (e: any) => {
     e.preventDefault();
     if (!title || !desc) {

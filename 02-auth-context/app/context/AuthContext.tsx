@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { User } from "../lib/UserType";
+
 type AuthContextType = {
   allUser: Array<User>;
   setAllUser: React.Dispatch<React.SetStateAction<Array<User>>>;
