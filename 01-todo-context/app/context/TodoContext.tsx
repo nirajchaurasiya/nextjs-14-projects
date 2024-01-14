@@ -10,9 +10,7 @@ type TodoContextType = {
   addTodo: (todo: Todos) => void;
 };
 
-export const TodoContext = React.createContext<TodoContextType | undefined>(
-  undefined
-);
+export const TodoContext = React.createContext<TodoContextType | null>(null);
 
 export default function TodoContextProvider({
   children,

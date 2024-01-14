@@ -5,22 +5,27 @@ import { useParams, useRouter } from "next/navigation";
 import { Todos } from "@/app/lib/definitions";
 
 export default function Page() {
-  const { todo, editTodo } = useContext(TodoContext);
+  const contextValue = useContext(TodoContext);
+
+  if (!contextValue) {
+    // Handle the case when context value is not available
+    return null;
+  }
+
+  const { todo, editTodo } = contextValue;
   const { page } = useParams();
-  const [singleTodo, setSingleTodo] = useState({});
   const router = useRouter();
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const [date, setDate] = useState("");
   useEffect(() => {
-    if (page && todo.length >= parseInt(page as string)) {
-      const filterTodo = todo.find(
-        (e: Todos) => e.id === parseInt(page as string)
+    if (page && todo?.length >= parseInt(page as string)) {
+      const filterTodo = todo?.find(
+        (e: Todos) => e?.id === parseInt(page as string)
       );
-      setSingleTodo(filterTodo);
-      setTitle(filterTodo?.title);
-      setDesc(filterTodo?.desc);
-      setDate(filterTodo?.date);
+      setTitle(filterTodo?.title || "loading...");
+      setDesc(filterTodo?.desc || "loading...");
+      setDate(filterTodo?.date || "loading...");
     }
   }, [page, todo]);
   function handleEditTodo(e: any) {
