@@ -13,7 +13,7 @@ export default function AllTodo() {
   }
 
   const { todo, removeTodo } = contextValue;
-  const handleEditTodo = (id: number) => {
+  const handleEditTodo = (id: string) => {
     router.push(`/edit/${id}`);
   };
   return (
@@ -36,10 +36,7 @@ export default function AllTodo() {
                     Created At: {e.date}
                   </p>
                   <p className="border-t border-t-gray-900 mb-3"></p>
-                  <p
-                    className="leading-relaxed text-gray-400 mb-3"
-                    style={{ fontSize: "11px" }}
-                  >
+                  <p className="leading-relaxed text-gray-400 mb-3 text-sm">
                     ID: {e.id}
                   </p>
                   <p className="border-t border-t-gray-900 mb-4"></p>
