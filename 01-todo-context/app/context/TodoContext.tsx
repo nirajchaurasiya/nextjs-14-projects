@@ -1,14 +1,7 @@
 "use client";
-import { Todos } from "../lib/definitions";
+import axios from "axios";
+import { AxiosDataType, TodoContextType, Todos } from "../lib/definitions";
 import React from "react";
-
-type TodoContextType = {
-  todo: Array<Todos>;
-  setTodo: React.Dispatch<React.SetStateAction<Array<Todos>>>;
-  removeTodo: (id: number) => void;
-  editTodo: (id: number, title: string, desc: string) => void;
-  addTodo: (todo: Todos) => void;
-};
 
 export const TodoContext = React.createContext<TodoContextType | null>(null);
 
@@ -18,14 +11,36 @@ export default function TodoContextProvider({
   children: React.ReactNode;
 }) {
   const [todo, setTodo] = React.useState<Todos[]>([]);
+
+  React.useEffect(() => {
+    async function fetchAllTodo() {
+      await axios
+        .get("/api/getTodo")
+        .then((data: AxiosDataType) => {
+          setTodo(data.data.getAllTodo);
+        })
+        .catch((err) => {
+          alert("Failed to connect to SERVER!");
+        });
+    }
+    fetchAllTodo();
+  }, []);
+
   const addTodo = (todo: Todos) => {
     setTodo((prevTodo) => [...prevTodo, todo]);
   };
 
-  const removeTodo = (id: number) => {
-    setTodo((prevTodo) => prevTodo.filter((e) => e.id !== id));
+  const removeTodo = (id: string) => {
+    axios
+      .delete(`/api/removeTodo/${id}`)
+      .then((data) => {
+        if (data.data.status === 1) setTodo(data.data.allTodo);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
-  function editTodo(id: number, title: string, desc: string) {
+  async function editTodo(id: string, title: string, desc: string) {
     setTodo((prevTodos) => {
       return prevTodos.map((todo) => {
         if (todo.id === id) {
@@ -37,6 +52,7 @@ export default function TodoContextProvider({
       });
     });
   }
+
   const allValues = {
     todo,
     setTodo,

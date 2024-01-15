@@ -2,29 +2,37 @@
 import React, { useContext, useState } from "react";
 import { TodoContext } from "../context/TodoContext";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 export default function Page() {
   const contextValue = useContext(TodoContext);
 
-  if (!contextValue) {
-    // Handle the case when context value is not available
-    return null;
-  }
+  if (!contextValue) return null;
 
-  const { todo, addTodo } = contextValue;
+  const { setTodo } = contextValue;
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
   const router = useRouter();
-  const handleAddTodo = (e: any) => {
+  const handleAddTodo = async (e: any) => {
     e.preventDefault();
     if (!title || !desc) {
     } else {
-      addTodo({
-        id: todo.length + 1,
-        title: title,
-        desc: desc,
-        date: new Date().toLocaleDateString(),
-      });
-      router.push("/");
+      await axios
+        .post(`/api/addTodo`, {
+          id: Date.now(),
+          title: title,
+          desc: desc,
+          date: new Date().toLocaleDateString(),
+        })
+        .then((data) => {
+          setTodo(data.data.allTodo);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+
+        .finally(() => {
+          router.push("/");
+        });
     }
   };
   return (

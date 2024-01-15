@@ -1,5 +1,5 @@
 import AllTodo from "./components/AllTodo";
 
-export default function Home() {
+export default async function Home() {
   return <AllTodo />;
 }

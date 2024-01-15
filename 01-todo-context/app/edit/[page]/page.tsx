@@ -3,8 +3,14 @@ import React, { useContext, useEffect, useState } from "react";
 import { TodoContext } from "@/app/context/TodoContext";
 import { useParams, useRouter } from "next/navigation";
 import { Todos } from "@/app/lib/definitions";
+import axios from "axios";
 
 export default function Page() {
+  const { page } = useParams();
+  const router = useRouter();
+  const [title, setTitle] = useState("loading...");
+  const [desc, setDesc] = useState("loading...");
+  const [date, setDate] = useState("loading...");
   const contextValue = useContext(TodoContext);
 
   if (!contextValue) {
@@ -12,25 +18,46 @@ export default function Page() {
     return null;
   }
 
-  const { todo, editTodo } = contextValue;
-  const { page } = useParams();
-  const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [desc, setDesc] = useState("");
-  const [date, setDate] = useState("");
+  const { todo, setTodo } = contextValue;
+
   useEffect(() => {
-    if (page && todo?.length >= parseInt(page as string)) {
-      const filterTodo = todo?.find(
-        (e: Todos) => e?.id === parseInt(page as string)
-      );
-      setTitle(filterTodo?.title || "loading...");
-      setDesc(filterTodo?.desc || "loading...");
-      setDate(filterTodo?.date || "loading...");
+    async function getTodoWithID() {
+      console.log("first");
+      if (page) {
+        console.log("second");
+        axios
+          .get(`/api/getTodoWithID/${page}`)
+          .then((data) => {
+            setTitle(data.data?.getTodo?.title);
+            setDesc(data.data?.getTodo?.desc);
+            setDate(data.data?.getTodo?.date);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      }
     }
+    getTodoWithID();
   }, [page, todo]);
   function handleEditTodo(e: any) {
     e.preventDefault();
-    editTodo(parseInt(page as string), title, desc);
+
+    try {
+      axios
+        .patch(`/api/editTodo/${page}`, {
+          title,
+          desc,
+        })
+        .then((data) => {
+          setTodo(data.data.data);
+        })
+        .catch((err) => {
+          alert(err);
+        })
+        .finally(() => {
+          // editTodo(parseInt(page as string), title, desc);
+        });
+    } catch (error) {}
     router.push("/");
   }
   return (

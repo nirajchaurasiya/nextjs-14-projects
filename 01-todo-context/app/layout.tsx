@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "TodoList",
   description: "Create todo list using useContext",
+  icons: "/favicon.ico",
 };
 
 export default function RootLayout({
